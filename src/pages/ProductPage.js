@@ -159,20 +159,21 @@ function ProductPage() {
                                             <tr>
                                                 <td colspan="6">
                                                     <center>
-                                                   
-                                                </center>
-                                            </td>
-                    </tr>
-                            )
-               
-              }
-                        </tbody>
-                    </table>
+                                                        <div class="spinner-border text-success" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        )
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div
-    </div >
-  );
+        </div >
+    );
 }
 
 export default ProductPage;
