@@ -126,13 +126,13 @@ function ProductPage() {
                         }}
                     >
                         <input
-                            type="text"
+                            type="search"
                             className="form-control"
                             placeholder="Search..."
                             aria-label="Username"
                             aria-describedby="basic-addon1"
 
-                            onKeyUp={(e) => handleSearch(e.target.value, products)}
+                            onChange={(e) => handleSearch(e.target.value, products)}
                         />
                     </div>
 
@@ -150,6 +150,19 @@ function ProductPage() {
                                 </tr>
                             </thead>
                             <tbody>
+                            {
+                                (tmpPlantData?.length == 0) && 
+                                (
+                                    <tr>
+                                    <td className='text-danger' colspan="6">
+                                        <center>
+                                            No records found !
+                                        </center>
+                                    </td>
+                                </tr>
+                                )
+                            }
+                                
                                 {
                                     tmpPlantData ?
                                         (
@@ -160,13 +173,16 @@ function ProductPage() {
                                                 <td colspan="6">
                                                     <center>
                                                         <div class="spinner-border text-success" role="status">
-                                                            <span class="sr-only">Loading...</span>
+                                                            <span class="sr-only"></span>
                                                         </div>
                                                     </center>
                                                 </td>
                                             </tr>
                                         )
+
+
                                 }
+
                             </tbody>
                         </table>
                     </div>
