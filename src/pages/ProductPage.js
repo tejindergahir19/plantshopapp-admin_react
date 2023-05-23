@@ -119,24 +119,53 @@ function ProductPage() {
                 <h2>Products</h2>
 
                 <div>
-                    <div
-                        className="input-group mb-3 mt-4"
-                        style={{
-                            width: "343px",
-                        }}
-                    >
-                        <input
-                            type="search"
-                            className="form-control"
-                            placeholder="Search..."
-                            aria-label="Username"
-                            aria-describedby="basic-addon1"
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
 
-                            onChange={(e) => handleSearch(e.target.value, products)}
-                        />
+                    }}>
+                        <div
+                            className="input-group mb-3 mt-4"
+                            style={{
+                                width: "343px",
+                            }}
+
+
+                        >
+                            <input
+                                type="search"
+                                className="form-control"
+                                placeholder="Search..."
+                                aria-label="Username"
+                                aria-describedby="basic-addon1"
+
+                                onChange={(e) => handleSearch(e.target.value, products)}
+                            />
+                        </div>
+
+                        <div style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}>
+                            <input class="form-check-input" type="checkbox" value="1" id="flexCheckDefault" onChange={
+                                (e)=>{
+                                    e.target.checked ?
+                                    (
+                                        setTmpPlantData(
+                                            products.filter((item)=>(
+                                                Number(item?.data?.unit == 0)
+                                            ))
+                                        )
+                                    ) : setTmpPlantData(products)
+                                }
+                            }></input>
+                            <span className="text-danger ms-2 mt-1 fw-bolder">Out of Stock</span>
+                        </div>
                     </div>
 
-                    <div className="mt-4">
+                    <div className="mt-2">
                         <table class="table">
                             <thead>
                                 <tr class="table-light">
@@ -150,19 +179,19 @@ function ProductPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                            {
-                                (tmpPlantData?.length == 0) && 
-                                (
-                                    <tr>
-                                    <td className='text-danger' colspan="6">
-                                        <center>
-                                            No records found !
-                                        </center>
-                                    </td>
-                                </tr>
-                                )
-                            }
-                                
+                                {
+                                    (tmpPlantData?.length == 0) &&
+                                    (
+                                        <tr>
+                                            <td className='text-danger' colspan="6">
+                                                <center>
+                                                    No records found !
+                                                </center>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
+
                                 {
                                     tmpPlantData ?
                                         (
