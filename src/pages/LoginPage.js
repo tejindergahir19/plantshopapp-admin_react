@@ -2,20 +2,19 @@ import React, { useState } from "react";
 import COLORS from "../constant/COLORS";
 
 import { db } from "../firebase";
-import {
-  getDocs,
-  query,
-  where,
-  collection
-} from "firebase/firestore";
+import { getDocs, query, where, collection } from "firebase/firestore";
+
+import {useNavigate} from "react-router-dom";
 
 function LoginPage() {
+    const navigate = useNavigate();
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const authLogin = async () => {
+  const authLogin = async (e) => {
+    e.target.innerText = "Please Wait..."
     if (username != null && password != null) {
       try {
         const q = query(
@@ -28,7 +27,7 @@ function LoginPage() {
           alert("Invalid Username !");
         } else {
           if (querySnapshot?.docs[0]?.data()?.password == password) {
-            alert("Login Success !");
+            navigate("/dashboard");
           } else {
             alert("Invalid Password !");
           }
@@ -39,6 +38,8 @@ function LoginPage() {
     } else {
       alert("All fields required !");
     }
+
+    e.target.innerText = "Login"
   };
 
   return (
@@ -126,7 +127,7 @@ function LoginPage() {
               background: COLORS.primary,
               color: COLORS.white,
             }}
-            onClick={() => authLogin()}
+            onClick={(e) => authLogin(e)}
             className="btn mt-2"
           >
             Login
