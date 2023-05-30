@@ -58,6 +58,8 @@ function ProductPage() {
     const [tmpPlantData, setTmpPlantData] = useState(null);
 
     const fetchProducts = async () => {
+        setProducts(null);
+        setTmpPlantData(null);
         let tmpData = [];
         try {
             const querySnapshot = await getDocs(collection(db, "tbl_plant_data"));
