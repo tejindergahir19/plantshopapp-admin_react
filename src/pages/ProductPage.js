@@ -5,6 +5,7 @@ import { db } from "../firebase";
 import { getDocs, collection } from "firebase/firestore";
 
 import COLORS from "../constant/COLORS";
+import AddProduct from "../components/AddProduct";
 
 function ProductTableList(props) {
     const { product, key } = props;
@@ -42,16 +43,9 @@ function ProductTableList(props) {
                 fontSize: "24px"
             }}>{product?.data?.price} {product?.data?.currency}</td>
 
-            <td width="220px">
-                <button type="button" className="btn btn-primary">
-                    View
-                </button>
+            <td width="75px">
                 <button type="button" className="btn btn-success ms-1">
                     Edit
-                </button>
-
-                <button type="button" className="btn btn-danger ms-1">
-                    Delete
                 </button>
             </td>
         </tr>
@@ -162,6 +156,13 @@ function ProductPage() {
                                 }
                             }></input>
                             <span className="text-danger ms-2 mt-1 fw-bolder">Out of Stock</span>
+
+
+                            <button type="button"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal" className="btn btn-primary ms-4">Add Product</button>
+
+                <AddProduct />
                         </div>
                     </div>
 
