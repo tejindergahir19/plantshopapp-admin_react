@@ -6,6 +6,7 @@ import { getDocs, collection } from "firebase/firestore";
 
 import COLORS from "../constant/COLORS";
 import AddProduct from "../components/AddProduct";
+import EditProduct from "../components/EditProduct";
 
 function ProductTableList(props) {
     const { product, key } = props;
@@ -44,9 +45,12 @@ function ProductTableList(props) {
             }}>{product?.data?.price} {product?.data?.currency}</td>
 
             <td width="75px">
-                <button type="button" className="btn btn-success ms-1">
+                <button data-bs-toggle="modal"
+                data-bs-target={"#"+ (product?.data?.title.split(" ").join(""))} type="button" className="btn btn-success ms-1" >
                     Edit
                 </button>
+        
+                <EditProduct data={product?.data} productId={product?.id} modalID={product?.data?.title.split(" ").join("")} />
             </td>
         </tr>
     );
