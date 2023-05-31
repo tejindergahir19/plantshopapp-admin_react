@@ -131,7 +131,8 @@ function OrderPage() {
 
                         >
                             <select onChange={(e) => handleSearch(e.target.value, orders)} className="form-select" aria-label="Default select example">
-                                <option value="pending" selected>Pending</option>
+                            <option  selected>Apply Filter</option>
+                                <option value="pending" >Pending</option>
                                 <option value="accepted">Accept</option>
                                 <option value="processing">Process</option>
                                 <option value="out for delivery">Out For Delivery</option>
