@@ -6,12 +6,13 @@ import {
     where,
     collection,
 } from "firebase/firestore";
+import emailjs from '@emailjs/browser';
 
 import ProductCard from "./ProductCard";
 
 function OrderDetail(props) {
 
-    const { modalId, data, userId,orderId} = props;
+    const { modalId, data, userId, orderId } = props;
     const [isUpdating, setIsUpdating] = useState(false);
 
     const [userContactDetails, setUserContactDetails] = useState(null);
@@ -21,6 +22,8 @@ function OrderDetail(props) {
     const [deliverBy, setDeliverBy] = useState(data?.deliveryBy);
     const [msg, setMsg] = useState(data?.msg);
 
+    const [sendEmail, setSendEmail] = useState(false);
+
 
     const handleSubmit = async () => {
         setIsUpdating(true);
@@ -28,10 +31,35 @@ function OrderDetail(props) {
         try {
             // Add a new document with a generated id.
             const docRef = await updateDoc(doc(db, "tbl_orders", orderId), {
-                status:orderStatus,
-           deliveryBy:deliverBy,
-                msg:msg
+                status: orderStatus,
+                deliveryBy: deliverBy,
+                msg: msg
             });
+
+            console.log("email")
+            sendEmail && emailjs.send('service_pozrraa', 'template_0bxtafe', {
+                msg1: "Dear " + userContactDetails.name + " !",
+                msg2: "We wanted to provide you with an update on your order [" + orderId + "] placed on [" + data.date + "]. Your order is currently being processed and is making good progress. Our team is working diligently to prepare your items for shipment.",
+                msg3: "",
+                msg4: "Order Status : " + orderStatus.toUpperCase(),
+                msg5: "Deliver By   : " + deliverBy,
+                msg6: "",
+                msg7: "We aim to deliver your order within the estimated delivery date, but please note that it may be subject to change. If you have any questions or need assistance, please contact our customer support team at [Chat with us section in app]",
+                msg8: "Thank you for choosing us. We appreciate your business and will keep you updated on the progress of your order.",
+                msg9: "",
+                msg10: "Best regards",
+                msg11: "PlantShopAPP",
+                subject: `Order Update - (${orderId})`,
+                to: "tejinderpctebtech19cse@gmail.com"
+            }, 'JZXjyLlOrXEB1DddM')
+                .then((result) => {
+
+                    console.log(result.text);
+                }, (error) => {
+                    console.log(error.text);
+                });
+
+
             alert("Order Status Updated !");
             window.location.replace("./order");
 
@@ -60,7 +88,8 @@ function OrderDetail(props) {
                 {
                     name: data.userName,
                     phone: data.userPhone,
-                    address: data.userAddress
+                    address: data.userAddress,
+                    email: data.userEmail
                 }
             )
         } catch (error) {
@@ -148,7 +177,7 @@ function OrderDetail(props) {
                                             outline: "none",
                                             padding: "4px 8px",
                                             borderRadius: "6px"
-                                        }} id="inputState" onChange={(e)=>setOrderStatus(e.target.value)} className="form-select">
+                                        }} id="inputState" onChange={(e) => setOrderStatus(e.target.value)} className="form-select">
                                             {
                                                 [{
                                                     name: "Pending",
@@ -275,7 +304,26 @@ function OrderDetail(props) {
                                 </div>
                             </div>
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer d-flex justify-content-between">
+                            <div className="form-check">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    defaultValue=""
+                                    id="flexCheckDefault"
+
+                                    onChange={()=>{
+                                        setSendEmail(
+                                        (sendEmail) ? false : true
+                                    )
+                                 
+                                    }
+                                    }
+                                />
+                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                    Notify By Email
+                                </label>
+                            </div>
 
                             <button type="button" onClick={() => handleSubmit()} className="btn btn-primary">
                                 {
