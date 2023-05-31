@@ -24,6 +24,7 @@ function OrderDetail(props) {
 
     const handleSubmit = async () => {
         setIsUpdating(true);
+
         try {
             // Add a new document with a generated id.
             const docRef = await updateDoc(doc(db, "tbl_orders", orderId), {
@@ -197,7 +198,7 @@ function OrderDetail(props) {
                                     <span className="text-success">
                                         <div classname="input-group">
                                             <input
-                                                type="datetime-local"
+                                                type="date"
                                                 classname="form-control"
                                                 style={{
                                                     height: "32px",
