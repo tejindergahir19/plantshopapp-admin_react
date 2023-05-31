@@ -9,20 +9,20 @@ import OrderDetail from "../components/OrderDetail";
 
 const getStatusBgColor = (status) => {
     switch (status.toLowerCase()) {
-      case "delivered":
-      case "accepted":
-        return COLORS.primary;
+        case "delivered":
+        case "accepted":
+            return COLORS.primary;
 
-      case "out for delivery":
-        return COLORS.orange;
+        case "out for delivery":
+            return COLORS.orange;
 
-      case "cancelled":
-        return COLORS.red;
+        case "cancelled":
+            return COLORS.red;
 
-      default:
-        return COLORS.caption;
+        default:
+            return COLORS.caption;
     }
-  };
+};
 
 function OrderTableList(props) {
     const { order, key } = props;
@@ -37,9 +37,9 @@ function OrderTableList(props) {
                 {order?.data?.date}
             </td>
             <td>
-            {order?.data?.time}
+                {order?.data?.time}
             </td>
-            <td  style={{
+            <td style={{
                 fontWeight: "bold",
                 color: COLORS.primary,
                 fontSize: "24px"
@@ -48,16 +48,16 @@ function OrderTableList(props) {
             </td>
 
             <td style={{
-                textTransform:"capitalize",
-                color:getStatusBgColor(order?.data?.status)
-            }}  width="175px">
+                textTransform: "capitalize",
+                color: getStatusBgColor(order?.data?.status)
+            }} width="175px">
                 {order?.data?.status}
             </td>
 
             <td width="75px">
                 <button data-bs-toggle="modal"
-                data-bs-target={"#"+"tj"+order.id} className="btn btn-success">View</button>
-                <OrderDetail modalId={"tj"+order.id} data={order?.data} />
+                    data-bs-target={"#" + "tj" + order.id} className="btn btn-success">View</button>
+                <OrderDetail modalId={"tj" + order.id} data={order?.data} userId={order?.data?.userId} />
             </td>
         </tr>
     );
@@ -85,34 +85,23 @@ function OrderPage() {
         } catch (error) {
             console.log("Unable to fetch products " + error);
         }
-console.clear()
+        console.clear()
         console.log(tmpData)
         setOrders(tmpData);
         setTmpOrders(tmpData);
     };
 
-    const handleSearch = (search, plantData) => {
-        // search != ""
-        //     ? setTmpPlantData(
-        //         plantData.filter(
-        //             (item) =>
-        //                 item?.data?.category
-        //                     .toLowerCase()
-        //                     .includes(search.toLowerCase()) ||
-        //                 item?.data?.description
-        //                     .toLowerCase()
-        //                     .includes(search.toLowerCase()) ||
-        //                 item?.data?.plantType
-        //                     .toLowerCase()
-        //                     .includes(search.toLowerCase()) ||
-        //                 item?.data?.price.toLowerCase().includes(search.toLowerCase()) ||
-        //                 item?.data?.size.toLowerCase().includes(search.toLowerCase()) ||
-        //                 item?.data?.title.toLowerCase().includes(search.toLowerCase())
-        //         )
-        //     )
-        //     : setTmpPlantData(plantData);
-
-        // console.log(tmpPlantData)
+    const handleSearch = (search, orders) => {
+        search != ""
+            ? setTmpOrders(
+                orders.filter(
+                    (item) =>
+                        item?.data?.status
+                            .toLowerCase()
+                            .includes(search.toLowerCase())
+                )
+            )
+            : setTmpOrders(orders);
     };
 
     useEffect(() => {
@@ -141,15 +130,17 @@ console.clear()
 
 
                         >
-                            <input
-                                type="search"
-                                className="form-control"
-                                placeholder="Search..."
-                                aria-label="Username"
-                                aria-describedby="basic-addon1"
+                            <select onChange={(e) => handleSearch(e.target.value, orders)} className="form-select" aria-label="Default select example">
+                                <option value="pending" selected>Pending</option>
+                                <option value="accepted">Accept</option>
+                                <option value="processing">Process</option>
+                                <option value="out for delivery">Out For Delivery</option>
+                                <option value="delivered">Delivered</option>
+                                <option value="cancelled">Cancel</option>
+                            </select>
 
-                                onChange={(e) => handleSearch(e.target.value,orders)}
-                            />
+
+                         
                         </div>
                     </div>
 
@@ -162,7 +153,7 @@ console.clear()
                                     <th>Time</th>
                                     <th scope="col">Amount</th>
                                     <th scope="col">Status</th>
-                    <th></th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -182,7 +173,7 @@ console.clear()
                                 {
                                     tmpOrders ?
                                         (
-                                           tmpOrders?.map((item) => <OrderTableList order={item} key={item.id} />)
+                                            tmpOrders?.map((item) => <OrderTableList order={item} key={item.id} />)
                                         ) :
                                         (
                                             <tr>

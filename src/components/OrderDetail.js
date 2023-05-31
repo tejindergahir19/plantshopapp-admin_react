@@ -1,12 +1,27 @@
 import { useEffect, useState } from "react";
+import { db } from "../firebase";
+import {
+    doc,
+    getDoc,
+    getDocs,
+    query,
+    where,
+    addDoc,
+    collection,
+    deleteDoc,
+    updateDoc,
+} from "firebase/firestore";
+import ProductCard from "./ProductCard";
 
 function OrderDetail(props) {
 
-    const { modalId, data } = props;
+    const { modalId, data, userId } = props;
 
     console.log(modalId)
 
     const [isUpdating, setIsUpdating] = useState(false);
+
+    const [userContactDetails, setUserContactDetails] = useState(null);
 
     const handleSubmit = async () => {
         setIsUpdating(true);
@@ -14,8 +29,33 @@ function OrderDetail(props) {
         setIsUpdating(false);
     }
 
-    useEffect(() => {
+    const getUserContactDetails = async () => {
+        console.clear()
+        console.log("user details")
+        setUserContactDetails(null);
+        try {
+            const q = query(
+                collection(db, "tbl_user"),
+                where("userId", "==", userId)
+            );
+            const querySnapshot = await getDocs(q);
 
+            const data = querySnapshot.docs[0].data();
+
+            setUserContactDetails(
+                {
+                    name: data.userName,
+                    phone: data.userPhone,
+                    address: data.userAddress
+                }
+            )
+        } catch (error) {
+            console.error("Error checking user: ", error);
+        }
+    }
+
+    useEffect(() => {
+        getUserContactDetails()
     }, []);
 
     return (
@@ -27,7 +67,7 @@ function OrderDetail(props) {
                 aria-labelledby="exampleModalLabel"
                 aria-hidden="true"
             >
-                <div className="modal-dialog modal-dialog-centered ">
+                <div className="modal-dialog modal-dialog-scrollable modal-dialog-centered ">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="exampleModalLabel">
@@ -54,7 +94,13 @@ function OrderDetail(props) {
                                 </div>
                             </div>
                             <hr />
-
+                            <div className="row g-3">
+                                {
+                                    data?.items.map((item,key)=>(
+                                        <ProductCard key={key} item={item} />
+                                    ))
+                                }
+                            </div>
                             <hr />
                             <div className="row g-3">
                                 <div className="col my-3 d-flex justify-content-between aling-items-center">
@@ -81,21 +127,21 @@ function OrderDetail(props) {
                                 <div className="col my-3 d-flex justify-content-between aling-items-center">
                                     <span className="fw-bold">Order Status</span>
                                     <span className="text-success">
-                                    <select  style={{
-                                                    height:"32px",
-                                                    width:"232px",
-                                                    border:"1px solid lightgrey",
-                                                    outline:"none",
-                                                    padding:"4px 8px",
-                                                    borderRadius:"6px"
-                                                }} id="inputState" className="form-select">
-                                        <option value="pending">Pending</option>
-                                        <option value="accepted">Accept</option>
-                                        <option value="processing">Process</option>
-                                        <option value="out for delivery">Out For Delivery</option>
-                                        <option value="delivered">Delivered</option>
-                                        <option value="cancelled">Cancel</option>
-                                    </select></span>
+                                        <select style={{
+                                            height: "32px",
+                                            width: "232px",
+                                            border: "1px solid lightgrey",
+                                            outline: "none",
+                                            padding: "4px 8px",
+                                            borderRadius: "6px"
+                                        }} id="inputState" className="form-select">
+                                            <option value="pending">Pending</option>
+                                            <option value="accepted">Accept</option>
+                                            <option value="processing">Process</option>
+                                            <option value="out for delivery">Out For Delivery</option>
+                                            <option value="delivered">Delivered</option>
+                                            <option value="cancelled">Cancel</option>
+                                        </select></span>
                                 </div>
                             </div>
                             <div className="row g-3">
@@ -113,11 +159,11 @@ function OrderDetail(props) {
                                                 type="datetime-local"
                                                 classname="form-control"
                                                 style={{
-                                                    height:"32px",
-                                                    border:"1px solid lightgrey",
-                                                    outline:"none",
-                                                    padding:"4px 8px",
-                                                    borderRadius:"6px"
+                                                    height: "32px",
+                                                    border: "1px solid lightgrey",
+                                                    outline: "none",
+                                                    padding: "4px 8px",
+                                                    borderRadius: "6px"
                                                 }}
                                             />
                                         </div>
@@ -134,20 +180,46 @@ function OrderDetail(props) {
                                             <input
                                                 type="text"
                                                 classname="form-control"
-                                
+
                                                 style={{
-                                                    height:"32px",
-                                                    width:"232px",
-                                                    border:"1px solid lightgrey",
-                                                    outline:"none",
-                                                    padding:"4px 8px",
-                                                    borderRadius:"6px"
+                                                    height: "32px",
+                                                    width: "232px",
+                                                    border: "1px solid lightgrey",
+                                                    outline: "none",
+                                                    padding: "4px 8px",
+                                                    borderRadius: "6px"
                                                 }}
 
                                                 placeholder="Message"
                                             />
                                         </div>
 
+                                    </span>
+                                </div>
+                            </div>
+                            <hr />
+                            <div className="row g-3">
+                                <div className="col my-3 ">
+                                    <span className="fw-bold d-block">Contact Details</span>
+                                    <span className="text-secondary d-block">
+                                        {
+                                            userContactDetails ?
+                                                (
+                                                    <>
+                                                    <span className="d-block">{userContactDetails?.name}</span>
+                                                    <span className="d-block">{userContactDetails?.address}</span>
+                                                    <span className="d-block" ><span className="fw-bold">Phone : </span>{userContactDetails?.phone}</span>
+                                                    </>
+                                                ) :
+                                                (
+                                                    <center>
+                                                    <div className="mt-4 spinner-border text-success" role="status">
+                                                        <span className="visually-hidden">Loading...</span>
+                                                    </div>
+                                                    </center>
+
+                                                )
+                                        }
                                     </span>
                                 </div>
                             </div>
