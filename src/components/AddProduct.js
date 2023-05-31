@@ -49,7 +49,7 @@ function AddProduct() {
             alert("Unable to add product at this moment !")
         }
 
-
+        setIsAdding(false);
     }
 
 

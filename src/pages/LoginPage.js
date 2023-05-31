@@ -27,7 +27,7 @@ function LoginPage() {
           alert("Invalid Username !");
         } else {
           if (querySnapshot?.docs[0]?.data()?.password == password) {
-            navigate("/dashboard");
+            navigate("/product");
           } else {
             alert("Invalid Password !");
           }
