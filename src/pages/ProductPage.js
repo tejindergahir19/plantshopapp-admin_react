@@ -116,7 +116,7 @@ function ProductPage() {
             <Navbar />
 
             <div className="container mt-4 p-3">
-                <h2>Products</h2>
+                <h2>Products {"("+tmpPlantData?.length+")"}</h2>
 
                 <div>
                     <div style={{

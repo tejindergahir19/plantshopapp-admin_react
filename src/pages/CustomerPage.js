@@ -1,6 +1,10 @@
+import Navbar from "../components/Navbar";
+
 function CustomerPage(){
     return(
-        <p>CustomerPage</p>
+        <div className="container-fluid m-0 p-0">
+            <Navbar />
+            </div>
     );
 }
 

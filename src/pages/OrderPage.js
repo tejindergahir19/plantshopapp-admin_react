@@ -113,7 +113,7 @@ function OrderPage() {
             <Navbar />
 
             <div className="container mt-4 p-3">
-                <h2>Orders</h2>
+                <h2>Orders  {"("+tmpOrders?.length+")"}</h2>
 
                 <div>
                     <div style={{
