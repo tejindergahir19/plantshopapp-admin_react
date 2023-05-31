@@ -57,7 +57,7 @@ function OrderTableList(props) {
             <td width="75px">
                 <button data-bs-toggle="modal"
                     data-bs-target={"#" + "tj" + order.id} className="btn btn-success">View</button>
-                <OrderDetail modalId={"tj" + order.id} data={order?.data} userId={order?.data?.userId} />
+                <OrderDetail orderId={order.id} modalId={"tj" + order.id} data={order?.data} userId={order?.data?.userId} />
             </td>
         </tr>
     );

@@ -1,33 +1,46 @@
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import {
-    doc,
-    getDoc,
-    getDocs,
+    getDocs, doc, updateDoc,
     query,
     where,
-    addDoc,
     collection,
-    deleteDoc,
-    updateDoc,
 } from "firebase/firestore";
+
 import ProductCard from "./ProductCard";
 
 function OrderDetail(props) {
 
-    const { modalId, data, userId } = props;
-
-    console.log(modalId)
-
+    const { modalId, data, userId,orderId} = props;
     const [isUpdating, setIsUpdating] = useState(false);
 
     const [userContactDetails, setUserContactDetails] = useState(null);
 
+
+    const [orderStatus, setOrderStatus] = useState(data?.status);
+    const [deliverBy, setDeliverBy] = useState(data?.deliveryBy);
+    const [msg, setMsg] = useState(data?.msg);
+
+
     const handleSubmit = async () => {
         setIsUpdating(true);
+        try {
+            // Add a new document with a generated id.
+            const docRef = await updateDoc(doc(db, "tbl_orders", orderId), {
+                status:orderStatus,
+           deliveryBy:deliverBy,
+                msg:msg
+            });
+            alert("Order Status Updated !");
+            window.location.replace("./order");
 
+        } catch (error) {
+            console.log(error)
+            alert("Unable to update order at this moment !")
+        }
         setIsUpdating(false);
     }
+
 
     const getUserContactDetails = async () => {
         console.clear()
@@ -96,7 +109,7 @@ function OrderDetail(props) {
                             <hr />
                             <div className="row g-3">
                                 {
-                                    data?.items.map((item,key)=>(
+                                    data?.items.map((item, key) => (
                                         <ProductCard key={key} item={item} />
                                     ))
                                 }
@@ -129,18 +142,46 @@ function OrderDetail(props) {
                                     <span className="text-success">
                                         <select style={{
                                             height: "32px",
-                                            width: "232px",
+                                            width: "235px",
                                             border: "1px solid lightgrey",
                                             outline: "none",
                                             padding: "4px 8px",
                                             borderRadius: "6px"
-                                        }} id="inputState" className="form-select">
-                                            <option value="pending">Pending</option>
-                                            <option value="accepted">Accept</option>
-                                            <option value="processing">Process</option>
-                                            <option value="out for delivery">Out For Delivery</option>
-                                            <option value="delivered">Delivered</option>
-                                            <option value="cancelled">Cancel</option>
+                                        }} id="inputState" onChange={(e)=>setOrderStatus(e.target.value)} className="form-select">
+                                            {
+                                                [{
+                                                    name: "Pending",
+                                                    value: "pending"
+                                                }, {
+                                                    name: "Accept",
+                                                    value: "accepted"
+                                                }, {
+                                                    name: "Process",
+                                                    value: "processing"
+                                                }, {
+                                                    name: "Out For Delivery",
+                                                    value: "out for delivery"
+                                                }, {
+                                                    name: "Delivered",
+                                                    value: "delivered"
+                                                }, {
+                                                    name: "Cancel",
+                                                    value: "cancelled"
+                                                },
+                                                ].map((item, key) => (
+                                                    (item?.value == orderStatus.toLowerCase()) ?
+                                                        (
+                                                            <option selected key={key} value={item?.value}>{item?.name}</option>
+                                                        ) :
+                                                        (
+                                                            <option key={key} value={item?.value}>{item?.name}</option>
+                                                        )
+
+                                                ))
+
+                                            }
+
+
                                         </select></span>
                                 </div>
                             </div>
@@ -160,11 +201,16 @@ function OrderDetail(props) {
                                                 classname="form-control"
                                                 style={{
                                                     height: "32px",
+                                                    width: "235px",
                                                     border: "1px solid lightgrey",
                                                     outline: "none",
                                                     padding: "4px 8px",
                                                     borderRadius: "6px"
                                                 }}
+
+                                                value={deliverBy}
+
+                                                onChange={(e) => setDeliverBy(e.target.value)}
                                             />
                                         </div>
 
@@ -183,12 +229,16 @@ function OrderDetail(props) {
 
                                                 style={{
                                                     height: "32px",
-                                                    width: "232px",
+                                                    width: "235px",
                                                     border: "1px solid lightgrey",
                                                     outline: "none",
                                                     padding: "4px 8px",
                                                     borderRadius: "6px"
                                                 }}
+
+                                                value={msg}
+
+                                                onChange={(e) => setMsg(e.target.value)}
 
                                                 placeholder="Message"
                                             />
@@ -206,16 +256,16 @@ function OrderDetail(props) {
                                             userContactDetails ?
                                                 (
                                                     <>
-                                                    <span className="d-block">{userContactDetails?.name}</span>
-                                                    <span className="d-block">{userContactDetails?.address}</span>
-                                                    <span className="d-block" ><span className="fw-bold">Phone : </span>{userContactDetails?.phone}</span>
+                                                        <span className="d-block">{userContactDetails?.name}</span>
+                                                        <span className="d-block">{userContactDetails?.address}</span>
+                                                        <span className="d-block" ><span className="fw-bold">Phone : </span>{userContactDetails?.phone}</span>
                                                     </>
                                                 ) :
                                                 (
                                                     <center>
-                                                    <div className="mt-4 spinner-border text-success" role="status">
-                                                        <span className="visually-hidden">Loading...</span>
-                                                    </div>
+                                                        <div className="mt-4 spinner-border text-success" role="status">
+                                                            <span className="visually-hidden">Loading...</span>
+                                                        </div>
                                                     </center>
 
                                                 )
@@ -226,11 +276,11 @@ function OrderDetail(props) {
                         </div>
                         <div className="modal-footer">
 
-                            {/* <button type="button" onClick={() => handleSubmit()} className="btn btn-primary">
+                            <button type="button" onClick={() => handleSubmit()} className="btn btn-primary">
                                 {
-                                    isAdding ? "Adding Product..." : "Add Now"
+                                    isUpdating ? "Updating Product..." : "Update Now"
                                 }
-                            </button> */}
+                            </button>
                         </div>
                     </div>
                 </div>
