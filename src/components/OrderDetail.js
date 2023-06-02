@@ -50,7 +50,7 @@ function OrderDetail(props) {
                 msg10: "Best regards",
                 msg11: "PlantShopAPP",
                 subject: `Order Update - (${orderId})`,
-                to: "tejinderpctebtech19cse@gmail.com"
+                to: userContactDetails.email
             }, 'JZXjyLlOrXEB1DddM')
                 .then((result) => {
 
