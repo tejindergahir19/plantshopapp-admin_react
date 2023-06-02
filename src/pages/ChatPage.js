@@ -7,8 +7,8 @@ import {
     collection,
 } from "firebase/firestore";
 
-function CustomerPage() {
-
+function ChatPage(){
+    
     const [userList, setUserList] = useState(null);
     const [tmpUserList, setTmpUserList] = useState(null);
 
@@ -17,7 +17,7 @@ function CustomerPage() {
         setTmpUserList(null);
         let tmpData = [];
         try {
-            const querySnapshot = await getDocs(collection(db, "tbl_user"));
+            const querySnapshot = await getDocs(collection(db, "tbl_contact"));
             querySnapshot.forEach((doc) => {
                 tmpData.push({
                     id: doc.id,
@@ -44,7 +44,7 @@ function CustomerPage() {
         <div className="container-fluid m-0 p-0">
             <Navbar />
             <div className="container mt-4 p-3">
-                <h2>Customers  {"(" + tmpUserList?.length + ")"}</h2>
+                <h2>Chat  {"(" + tmpUserList?.length + ")"}</h2>
 
                
 
@@ -54,8 +54,8 @@ function CustomerPage() {
                             <tr class="table-light">
                                 <th scope="col">NAME</th>
                                 <th scope="col">EMAIL</th>
-                                <th scope="col">PHONE</th>
-                                <th scope="col">ADDRESS</th>
+                                <th scope="col">SUBJECT</th>
+                                <th scope="col">MESSAGE</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,10 +78,10 @@ function CustomerPage() {
                                         tmpUserList?.map((item,key) => (
                                             <>
                                                 <tr>
-                                                    <td>{item?.data?.userName}</td>
-                                                    <td>{item?.data?.userEmail}</td>
-                                                    <td>{item?.data?.userPhone}</td>
-                                                    <td>{item?.data?.userAddress}</td>
+                                                    <td>{item?.data?.name}</td>
+                                                    <td>{item?.data?.email}</td>
+                                                    <td>{item?.data?.subject}</td>
+                                                    <td>{item?.data?.message}</td>
                                                 </tr>
                                             </>
                                         ))
@@ -111,4 +111,4 @@ function CustomerPage() {
     );
 }
 
-export default CustomerPage;
+export default ChatPage;
