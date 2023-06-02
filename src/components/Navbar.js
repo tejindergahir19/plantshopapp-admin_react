@@ -39,17 +39,18 @@ function Navbar() {
                 Customers
               </Link>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <Link className="nav-link" aria-current="page" to="/dashboard">
                 Chat
               </Link>
-            </li>
+            </li> */}
           </ul>
           <form className="d-flex" role="search">
+            <Link className="btn btn-outline-success" to="/">
             
-            <button className="btn btn-outline-success" type="button">
               Logout
-            </button>
+          
+            </Link>
           </form>
         </div>
       </div>
