@@ -46,11 +46,11 @@ function ProductTableList(props) {
 
             <td width="75px">
                 <button data-bs-toggle="modal"
-                data-bs-target={"#"+ (product?.data?.title.split(" ").join(""))} type="button" className="btn btn-success ms-1" >
+                data-bs-target={"#tj"+product?.id} type="button" className="btn btn-success ms-1" >
                     Edit
                 </button>
         
-                <EditProduct data={product?.data} productId={product?.id} modalID={product?.data?.title.split(" ").join("")} />
+                <EditProduct data={product?.data} productId={product?.id} modalID={"tj"+product?.id} />
             </td>
         </tr>
     );
